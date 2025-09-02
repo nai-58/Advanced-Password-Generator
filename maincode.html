@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Advanced Password Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 50px auto; text-align: center; }
+        input, button { padding: 8px; margin: 5px; }
+        #result { margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Advanced Password Generator</h2>
+    
+    <label>Password Length:</label>
+    <input type="number" id="length" value="12" min="4" max="50"><br>
+    
+    <label><input type="checkbox" id="symbols" checked> Include Symbols</label><br>
+    
+    <button onclick="generatePassword()">Generate Password</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        function generatePassword() {
+            const length = parseInt(document.getElementById("length").value) || 12;
+            const useSymbols = document.getElementById("symbols").checked;
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            const digits = "0123456789";
+            const symbols = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+            
+            let characters = letters + digits;
+            if (useSymbols) characters += symbols;
+            
+            let password = "";
+            for (let i = 0; i < length; i++) {
+                password += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            
+            let strength = "Weak";
+            const hasUpper = /[A-Z]/.test(password);
+            const hasLower = /[a-z]/.test(password);
+            const hasDigit = /\d/.test(password);
+            const hasSymbol = /[!@#$%^&*()_+\-=[\]{}|;:,.<>?]/.test(password);
+            const score = [hasUpper, hasLower, hasDigit, hasSymbol].filter(Boolean).length;
+            
+            if (length >= 12 && score === 4) strength = "Strong";
+            else if (length >= 8 && score >= 3) strength = "Medium";
+            
+            document.getElementById("result").innerHTML = `Password: ${password}<br>Strength: ${strength}`;
+        }
+    </script>
+</body>
+</html>
